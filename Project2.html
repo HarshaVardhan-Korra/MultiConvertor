@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            color: #333;
+        }
+        button {
+            margin: 5px;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .converter {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+        .active {
+            display: block;
+        }
+        input, select {
+            margin: 5px 0;
+            padding: 10px;
+            width: 100%;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        p {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<h1>Multi Converter</h1>
+<div>
+    <button onclick="showConverter('currency')">Currency Converter</button>
+    <button onclick="showConverter('temperature')">Temperature Converter</button>
+    <button onclick="showConverter('gold')">Gold Converter</button>
+    <button onclick="showConverter('area')">Area Converter</button>
+    <button onclick="showConverter('speed')">Speed Converter</button>
+</div>
+
+<div id="currency" class="converter active">
+    <h2>Currency Converter</h2>
+    <input type="number" id="currencyAmount" placeholder="Amount" min="0">
+    <select id="currencyFrom">
+        <option value="USD">USD</option>
+        <option value="EUR">EUR</option>
+        <option value="JPY">JPY</option>
+        <option value="GBP">GBP</option>
+        <option value="AUD">AUD</option>
+        <option value="CAD">CAD</option>
+        <option value="CHF">CHF</option>
+        <option value="CNY">CNY</option>
+        <option value="INR">INR</option>
+    </select>
+    to
+    <select id="currencyTo">
+        <option value="USD">USD</option>
+        <option value="EUR">EUR</option>
+        <option value="JPY">JPY</option>
+        <option value="GBP">GBP</option>
+        <option value="AUD">AUD</option>
+        <option value="CAD">CAD</option>
+        <option value="CHF">CHF</option>
+        <option value="CNY">CNY</option>
+        <option value="INR">INR</option>
+    </select>
+    <button onclick="convertCurrency()">Convert</button>
+    <p id="currencyResult"></p>
+</div>
+<div id="temperature" class="converter">
+    <h2>Temperature Converter</h2>
+    <input type="number" id="tempValue" placeholder="Temperature">
+    <select id="tempUnit">
+        <option value="C">Celsius</option>
+        <option value="F">Fahrenheit</option>
+    </select>
+    to
+    <select id="tempUnitTo">
+        <option value="C">Celsius</option>
+        <option value="F">Fahrenheit</option>
+    </select>
+    <button onclick="convertTemperature()">Convert</button>
+    <p id="tempResult"></p>
+</div>
+
+<div id="gold" class="converter">
+    <h2>Gold Price Converter</h2>
+    <input type="number" id="goldAmount" placeholder="Gold in grams" min="0">
+    <button onclick="convertGold()">Convert to USD</button>
+    <p id="goldResult"></p>
+</div>
+
+<div id="area" class="converter">
+    <h2>Area Converter</h2>
+    <input type="number" id="areaValue" placeholder="Area">
+    <select id="areaUnit">
+        <option value="m2">Square Meters</option>
+        <option value="ha">Hectares</option>
+        <option value="ac">Acres</option>
+        <option value="ft2">Square Feet</option>
+    </select>
+    to
+    <select id="areaUnitTo">
+        <option value="m2">Square Meters</option>
+        <option value="ha">Hectares</option>
+        <option value="ac">Acres</option>
+        <option value="ft2">Square Feet</option>
+    </select>
+    <button onclick="convertArea()">Convert</button>
+    <p id="areaResult"></p>
+</div>
+<div id="speed" class="converter">
+    <h2>Speed Converter</h2>
+    <input type="number" id="speedValue" placeholder="Speed">
+    <select id="speedUnit">
+        <option value="kmh">Kilometers per Hour</option>
+        <option value="mph">Miles per Hour</option>
+        <option value="ms">Meters per Second</option>
+    </select>
+    to
+    <select id="speedUnitTo">
+        <option value="kmh">Kilometers per Hour</option>
+        <option value="mph">Miles per Hour</option>
+        <option value="ms">Meters per Second</option>
+    </select>
+    <button onclick="convertSpeed()">Convert</button>
+    <p id="speedResult"></p>
+</div>
+<script>
+    function showConverter(converter) {
+        document.querySelectorAll('.converter').forEach(div => {
+            div.classList.remove('active');
+        });
+        document.getElementById(converter).classList.add('active');
+    }
+    function convertCurrency() {
+        const amount = parseFloat(document.getElementById('currencyAmount').value);
+        if (isNaN(amount) || amount < 0) {
+            alert('Please enter a valid amount.');
+            return;
+        }
+        const from = document.getElementById('currencyFrom').value;
+        const to = document.getElementById('currencyTo').value;
+
+        const rates = { 
+            'USD': 1, 
+            'EUR': 0.85, 
+            'JPY': 110, 
+            'GBP': 0.75, 
+            'AUD': 1.35, 
+            'CAD': 1.25, 
+            'CHF': 0.92, 
+            'CNY': 6.45, 
+            'INR': 73.00 
+        };
+
+        const result = (amount / rates[from]) * rates[to];
+        document.getElementById('currencyResult').innerText = `Result: ${result.toFixed(2)} ${to}`;
+    }
+    function convertTemperature() {
+        const value = parseFloat(document.getElementById('tempValue').value);
+        if (isNaN(value)) {
+            alert('Please enter a valid temperature.');
+            return;
+        }
+        const fromUnit = document.getElementById('tempUnit').value;
+        const toUnit = document.getElementById('tempUnitTo').value;
+        let result;
+
+        if (fromUnit === 'C' && toUnit === 'F') {
+            result = (value * 9/5) + 32;
+        } else if (fromUnit === 'F' && toUnit === 'C') {
+            result = (value - 32) * 5/9;
+        } else {
+            result = value; 
+        }
+        document.getElementById('tempResult').innerText = `Result: ${result.toFixed(2)} ${toUnit}`;
+    }
+    function convertGold() {
+        const amount = parseFloat(document.getElementById('goldAmount').value);
+        if (isNaN(amount) || amount < 0) {
+            alert('Please enter a valid amount of gold.');
+            return;
+        }
+        const goldPricePerGram = 60; 
+        const result = amount * goldPricePerGram;
+        document.getElementById('goldResult').innerText = `Result: $${result.toFixed(2)} USD`;
+    }
+    function convertArea() {
+        const value = parseFloat(document.getElementById('areaValue').value);
+        if (isNaN(value) || value < 0) {
+            alert('Please enter a valid area.');
+            return;
+        }
+        const fromUnit = document.getElementById('areaUnit').value;
+        const toUnit = document.getElementById('areaUnitTo').value;
+        const conversionRates = {
+            'm2': 1,
+            'ha': 10000,
+            'ac': 4046.86,
+            'ft2': 0.092903
+        };
+        const result = (value * conversionRates[fromUnit]) / conversionRates[toUnit];
+        document.getElementById('areaResult').innerText = `Result: ${result.toFixed(2)} ${toUnit}`;
+    }
+
+    function convertSpeed() {
+        const value = parseFloat(document.getElementById('speedValue').value);
+        if (isNaN(value) || value < 0) {
+            alert('Please enter a valid speed.');
+            return;
+        }
+        const fromUnit = document.getElementById('speedUnit').value;
+        const toUnit = document.getElementById('speedUnitTo').value;
+
+        const conversionRates = {
+            'kmh': 1,
+            'mph': 1.60934,
+            'ms': 3.6
+        };
+        const result = (value * conversionRates[fromUnit]) / conversionRates[toUnit];
+        document.getElementById('speedResult').innerText = `Result: ${result.toFixed(2)} ${toUnit}`;
+    }
+</script>
+</body>
+</html>
